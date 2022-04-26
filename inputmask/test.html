@@ -31,12 +31,13 @@
       />
     </div>
     <div class="inputmask">
-      <label for="birthday2">jQuery inputmask with inputEventOnlyX</label>
+      <label for="birthday2">jQuery inputmask with inputEventOnly</label>
       <input
         class="birthday"
         id="birthday2"
         type="text"
         data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd'"
+        data-inputmask-inputEventOnly="true"
         placeholder="YYYY-MM-DD"
       />
     </div>
@@ -51,7 +52,7 @@
       />
     </div>
     <script>
-      $(".inputmask .birthday").inputmask({ inputEventOnly: true });
+      $(".inputmask .birthday").inputmask();
       $(".inputmask .birthday").on("mousedown touchend", function () {
         setTimeout(
           (function (el) {
