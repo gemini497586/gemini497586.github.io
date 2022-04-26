@@ -11,7 +11,7 @@
       .birthday {
         text-transform: uppercase;
       }
-      
+
       .inputmask label {
         width: 300px;
         display: inline-block;
@@ -31,12 +31,12 @@
       />
     </div>
     <div class="inputmask">
-      <label for="birthday2">jQuery inputmask with inputEventOnly</label>
+      <label for="birthday2">jQuery inputmask with inputEventOnlyX</label>
       <input
         class="birthday"
         id="birthday2"
         type="text"
-        data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd', inputEventOnly: true"
+        data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd'"
         placeholder="YYYY-MM-DD"
       />
     </div>
@@ -51,7 +51,7 @@
       />
     </div>
     <script>
-      $(".inputmask .birthday").inputmask();
+      $(".inputmask .birthday").inputmask({ inputEventOnly: true });
       $(".inputmask .birthday").on("mousedown touchend", function () {
         setTimeout(
           (function (el) {
@@ -84,10 +84,12 @@
         $(this).val(inputFormat);
         var current = 0;
         $(this).on("input keydown", function () {
-          if(event.key == 46){console.log('Delete Key Pressed');}
-          var dInput = this.value; 
+          if (event.key == 46) {
+            console.log("Delete Key Pressed");
+          }
+          var dInput = this.value;
           // $(this).setSelctionRange(current, current);
-          console.log('current: ', current);
+          console.log("current: ", current);
           // $(this).val(dInput.replace(/[^0-9]/g, ""));
           // console.log(dInput);
           // console.log($(this).selectionStart);
