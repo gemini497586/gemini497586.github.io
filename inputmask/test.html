@@ -53,21 +53,21 @@
     </div>
     <script>
       $(".inputmask .birthday").inputmask();
-      $(".inputmask .birthday").on("mousedown touchend", function () {
-        setTimeout(
-          (function (el) {
-            let strLength = el.value.length;
-            return function () {
-              if (el.setSelctionRange !== undefined) {
-                el.setSelctionRange(strLength, strLength);
-              } else {
-                $(el).val(el.value);
-              }
-            };
-          })(this),
-          0
-        );
-      });
+      // $(".inputmask .birthday").on("mousedown touchend", function () {
+      //   setTimeout(
+      //     (function (el) {
+      //       let strLength = el.value.length;
+      //       return function () {
+      //         if (el.setSelctionRange !== undefined) {
+      //           el.setSelctionRange(strLength, strLength);
+      //         } else {
+      //           $(el).val(el.value);
+      //         }
+      //       };
+      //     })(this),
+      //     0
+      //   );
+      // });
 
       $("#birthday-2").on("mousedown touchend", function () {
         var inputFormat = "";
