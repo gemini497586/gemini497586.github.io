@@ -8,24 +8,51 @@
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8-beta.17/jquery.inputmask.min.js"></script>
     <style>
-        .birthday {
-            text-transform: uppercase;
-        }
+      .birthday {
+        text-transform: uppercase;
+      }
+      
+      .inputmask label {
+        width: 300px;
+        display: inline-block;
+      }
     </style>
   </head>
   <body>
     <h1>This is inputmask test</h1>
-    <input
-      class="birthday"
-      id="birthday"
-      type="text"
-      data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd'"
-      placeholder="YYYY-MM-DD"
-    />
-    <button id="birthdayResetBtn">reset birthday</button>
+    <div class="inputmask">
+      <label for="birthday">jQuery inputmask</label>
+      <input
+        class="birthday"
+        id="birthday"
+        type="text"
+        data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd'"
+        placeholder="YYYY-MM-DD"
+      />
+    </div>
+    <div class="inputmask">
+      <label for="birthday2">jQuery inputmask with inputEventOnly</label>
+      <input
+        class="birthday"
+        id="birthday2"
+        type="text"
+        data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd', inputEventOnly: true"
+        placeholder="YYYY-MM-DD"
+      />
+    </div>
+    <div>
+      <label for="birthday-2">jQuery</label>
+      <input
+        class="birthday"
+        id="birthday-2"
+        type="text"
+        data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd'"
+        placeholder="YYYY-MM-DD"
+      />
+    </div>
     <script>
-      $("#birthday").inputmask();
-      $("#birthday").on("mousedown touchend", function () {
+      $(".inputmask .birthday").inputmask();
+      $(".inputmask .birthday").on("mousedown touchend", function () {
         setTimeout(
           (function (el) {
             let strLength = el.value.length;
@@ -40,8 +67,32 @@
           0
         );
       });
-      $("#birthdayResetBtn").click(function () {
-        $("#birthday").val("");
+
+      $("#birthday-2").on("mousedown touchend", function () {
+        var inputFormat = "";
+        var setting = $(this).data("inputmask").split(",");
+        $.each(setting, function (index, value) {
+          if (value.indexOf("inputFormat") != -1) {
+            value = value.trim();
+            value = value.substring(value.lastIndexOf(":"));
+            inputFormat = value.substring(
+              value.indexOf("'") + 1,
+              value.lastIndexOf("'")
+            );
+          }
+        });
+        $(this).val(inputFormat);
+        var current = 0;
+        $(this).on("input keydown", function () {
+          if(event.key == 46){console.log('Delete Key Pressed');}
+          var dInput = this.value; 
+          // $(this).setSelctionRange(current, current);
+          console.log('current: ', current);
+          // $(this).val(dInput.replace(/[^0-9]/g, ""));
+          // console.log(dInput);
+          // console.log($(this).selectionStart);
+          current += 1;
+        });
       });
     </script>
   </body>
