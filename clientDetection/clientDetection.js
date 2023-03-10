@@ -124,7 +124,7 @@ const clientDetection = {
 
     if (/Windows/.test(os)) {
       osVersion = /Windows (.*)/.exec(os)[1];
-      os = "Windows";
+      // os = "Windows";
     }
 
     switch (os) {
