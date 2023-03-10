@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detection Test</title>
+    <script src="detectIncognito.min.js"></script>
+    <script src="clientDetection.js"></script>
+    <style>
+      button {
+        display: block;
+      }
+      button + button {
+        margin-top: 10px;
+      }
+      .message {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>JavaScript Client Detection Test</h3>
+    <button id="btn">Get All</button>
+    <button id="osBtn">os</button>
+    <button id="browserBtn">browser</button>
+    <button id="incognitoModeBtn">incognitoMode</button>
+
+    <div class="message">
+      作業系統: <span id="os"></span><br />
+      作業系統版本: <span id="osVer"></span><br />
+      瀏覽器: <span id="browser"></span><br />
+      瀏覽器版本: <span id="browserVer"></span><br />
+      瀏覽器供應商: <span id="supplier"></span><br />
+      無痕模式: <span id="incognitoMode"></span><br />
+    </div>
+    <p>
+      userAgent: <br />
+      <span id="ua"></span>
+    </p>
+
+    <script>
+      const os = document.getElementById("os");
+      const osVer = document.getElementById("osVer");
+      const browser = document.getElementById("browser");
+      const browserVer = document.getElementById("browserVer");
+      const supplier = document.getElementById("supplier");
+      const incognitoMode = document.getElementById("incognitoMode");
+      const ua = document.getElementById("ua");
+
+      function clear() {
+        os.innerHTML = "";
+        osVer.innerHTML = "";
+        browser.innerHTML = "";
+        browserVer.innerHTML = "";
+        supplier.innerHTML = "";
+        incognitoMode.innerHTML = "";
+      }
+
+      document.querySelector("#btn").addEventListener("click", async () => {
+        const result = await clientDetection.getAll();
+        console.log(result);
+
+        clear();
+        os.innerHTML = result.os;
+        osVer.innerHTML = result.osVersion;
+        browser.innerHTML = result.browserName;
+        browserVer.innerHTML = result.browserVersion;
+        supplier.innerHTML = result.supplier;
+        incognitoMode.innerHTML = result.incognitoMode;
+        ua.innerText = navigator.userAgent;
+      });
+      document.querySelector("#osBtn").addEventListener("click", () => {
+        const result = clientDetection.getOS();
+        console.log(result);
+
+        clear();
+        os.innerHTML = result.os;
+        osVer.innerHTML = result.osVersion;
+      });
+      document.querySelector("#browserBtn").addEventListener("click", () => {
+        const result = clientDetection.getBrowser();
+        console.log(result);
+
+        clear();
+        browser.innerHTML = result.browserName;
+        browserVer.innerHTML = result.browserVersion;
+        supplier.innerHTML = result.supplier;
+      });
+      document
+        .querySelector("#incognitoModeBtn")
+        .addEventListener("click", async () => {
+          const result = await clientDetection.getIncognitoMode();
+          console.log(result);
+
+          clear();
+          incognitoMode.innerHTML = result;
+        });
+    </script>
+  </body>
+</html>
