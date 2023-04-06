@@ -1,14 +1,46 @@
+import { detectIncognito } from "./detectIncognito.min.js";
+
 /**
  * JavaScript Client Detection
  */
-const clientDetection = {
+export const clientDetection = {
   // 瀏覽器
   getBrowser: () => {
-    const nAgt = navigator.userAgent;
-    let browser, version, supplier, nameOffset, verOffset, ix;
+    let nAgt = navigator.userAgent;
+    let browser = "unknown";
+    let version = "";
+    let supplier, verOffset, ix;
+  
+    if (nAgt.indexOf("AppleWebKit") != -1) {
+      nAgt = nAgt.substring(nAgt.indexOf("AppleWebKit"));
+    }
 
+    // Brave
+    // navigator.brave && await navigator.brave.isBrave()
+  
+    // Legacy Edge
+    if ((verOffset = nAgt.indexOf("Edge")) != -1) {
+      browser = "Edge";
+      version = nAgt.substring(verOffset + 5);
+      supplier = "Microsoft";
+    }
+    // Edge (Chromium)
+    else if ((verOffset = nAgt.indexOf("Edg")) != -1 ||
+      (verOffset = nAgt.indexOf("edg")) != -1
+    ) {
+      browser = "Edge";
+      version = nAgt.substring(verOffset + 4);
+      supplier = "Microsoft";
+      // Edge for iOS
+      if ((verOffset = nAgt.indexOf("EdgiOS")) != -1) {
+        version = nAgt.substring(verOffset + 7);
+      }
+    }
     // Opera, the true version is after "Opera" or after "Version"
-    if ((verOffset = nAgt.indexOf("Opera")) != -1) {
+    else if ((verOffset = nAgt.indexOf("Opera")) != -1 ||
+      (verOffset = nAgt.indexOf("opera")) != -1 ||
+      (verOffset = nAgt.indexOf("OPERA")) != -1
+    ) {
       browser = "Opera";
       version = nAgt.substring(verOffset + 6);
       supplier = "Opera";
@@ -17,60 +49,105 @@ const clientDetection = {
       }
     }
     // Opera Next
-    if ((verOffset = nAgt.indexOf("OPR")) != -1) {
+    else if ((verOffset = nAgt.indexOf("OPR")) != -1 ||
+      (verOffset = nAgt.indexOf("opr")) != -1
+    ) {
       browser = "Opera";
       version = nAgt.substring(verOffset + 4);
       supplier = "Opera";
     }
-    // Legacy Edge
-    else if ((verOffset = nAgt.indexOf("Edge")) != -1) {
-      browser = "Microsoft Legacy Edge";
-      version = nAgt.substring(verOffset + 5);
-      supplier = "Microsoft Corporation";
-    }
-    // Edge (Chromium)
-    else if ((verOffset = nAgt.indexOf("Edg")) != -1) {
-      browser = "Microsoft Edge";
+    // Opera for iOS
+    else if ((verOffset = nAgt.indexOf("OPT")) != -1) {
+      browser = "Opera";
       version = nAgt.substring(verOffset + 4);
-      supplier = "Microsoft Corporation";
+      supplier = "Opera";
+    }
+    // DuckDuckGo
+    else if ((verOffset = nAgt.indexOf("DuckDuckGo")) != -1) {
+      browser = "DuckDuckGo";
+      version = nAgt.substring(verOffset + 11);
+      supplier = "DuckDuckGo";
+    }
+    // Vivaldi
+    else if ((verOffset = nAgt.indexOf("Vivaldi")) != -1) {
+      browser = "Vivaldi";
+      version = nAgt.substring(verOffset + 8);
+      supplier = "Vivaldi";
+    }
+    // Aloha
+    else if ((verOffset = nAgt.indexOf("Aloha")) != -1) {
+      browser = "Aloha";
+      version = nAgt.substring(verOffset + 6);
+      supplier = "Aloha Mobile";
+      if ((verOffset = nAgt.indexOf("AlohaBrowser")) != -1) {
+        version = nAgt.substring(verOffset + 13);
+      }
+    }
+    // Samsung
+    else if ((verOffset = nAgt.indexOf("SamsungBrowser")) != -1 ||
+      (verOffset = nAgt.indexOf("samsungbrowser")) != -1
+    ) {
+      browser = "Samsung Internet";
+      version = nAgt.substring(verOffset + 15);
+      supplier = "Samsung";
+    }
+    // Firefox
+    else if ((verOffset = nAgt.indexOf("Firefox")) != -1 ||
+    (verOffset = nAgt.indexOf("FireFox")) != -1 ||
+    (verOffset = nAgt.indexOf("firefox")) != -1
+    ) {
+      browser = "Firefox";
+      version = nAgt.substring(verOffset + 8);
+      supplier = "Mozilla";
+    }
+    // Firefox for iOS
+    else if ((verOffset = nAgt.indexOf("FxiOS")) != -1) {
+      browser = "Firefox";
+      version = nAgt.substring(verOffset + 6);
+      supplier = "Mozilla";
+    }
+    // Google App
+    else if ((verOffset = nAgt.indexOf("GSA")) != -1) {
+      browser = "Google App";
+      version = nAgt.substring(verOffset + 4);
+      supplier = "Google";
+    }
+    // Chromium
+    else if ((verOffset = nAgt.indexOf("Chromium")) != -1) {
+      browser = "Chromium";
+      version = nAgt.substring(verOffset + 9);
+      supplier = "Google";
     }
     // Chrome
     else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
       browser = "Chrome";
       version = nAgt.substring(verOffset + 7);
-      supplier = "Google Inc.";
+      supplier = "Google";
     }
-    // Safari, the true version is after "Safari" or after "Version"
+    // Chrome for iOS
+    else if ((verOffset = nAgt.indexOf("CriOS")) != -1) {
+      browser = "Chrome";
+      version = nAgt.substring(verOffset + 6);
+      supplier = "Google";
+    }
+    // Safari
     else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
       browser = "Safari";
       version = nAgt.substring(verOffset + 7);
-      supplier = "Apple Inc.";
-      if ((verOffset = nAgt.indexOf("Version")) != -1) {
-        version = nAgt.substring(verOffset + 8);
-      }
-    }
-    // Firefox
-    else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
-      browser = "Firefox";
-      version = nAgt.substring(verOffset + 8);
-      supplier = "Mozilla Corporation";
+      supplier = "Apple";
     }
     // Other browsers
-    else if (
-      (nameOffset = nAgt.lastIndexOf(" ") + 1) <
-      (verOffset = nAgt.lastIndexOf("/"))
-    ) {
-      browser = nAgt.substring(nameOffset, verOffset);
-      version = nAgt.substring(verOffset + 1);
-      if (browser.toLowerCase() == browser.toUpperCase()) {
-        browser = navigator.appName;
-      }
+    else {
+      browser = "unknown";
+      version = nAgt.substring(nAgt.lastIndexOf("/") + 1) || "";
     }
+  
     // trim the version string
     if ((ix = version.indexOf(";")) != -1) version = version.substring(0, ix);
     if ((ix = version.indexOf(" ")) != -1) version = version.substring(0, ix);
     if ((ix = version.indexOf(")")) != -1) version = version.substring(0, ix);
-
+    if ((ix = version.indexOf("/")) != -1) version = version.substring(ix + 1);//最後執行
+    
     return {supplier: supplier, browserName: browser, browserVersion: version};
   },
   
@@ -91,10 +168,7 @@ const clientDetection = {
       { s: "Windows ME", r: /(Win 9x 4.90|Windows ME)/ },
       { s: "Windows 98", r: /(Windows 98|Win98)/ },
       { s: "Windows 95", r: /(Windows 95|Win95|Windows_95)/ },
-      {
-        s: "Windows NT 4.0",
-        r: /(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/,
-      },
+      { s: "Windows NT 4.0", r: /(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/ },
       { s: "Windows CE", r: /Windows CE/ },
       { s: "Windows 3.11", r: /Win16/ },
       { s: "Android", r: /Android/ },
@@ -109,10 +183,7 @@ const clientDetection = {
       { s: "UNIX", r: /UNIX/ },
       { s: "BeOS", r: /BeOS/ },
       { s: "OS/2", r: /OS\/2/ },
-      {
-        s: "Search Bot",
-        r: /(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/,
-      },
+      { s: "Search Bot", r: /(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/ },
     ];
     for (let id in clientStrings) {
       const cs = clientStrings[id];
