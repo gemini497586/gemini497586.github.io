@@ -176,7 +176,9 @@ export const clientDetection = {
       { s: "Sun OS", r: /SunOS/ },
       { s: "Chrome OS", r: /CrOS/ },
       { s: "Linux", r: /(Linux|X11(?!.*CrOS))/ },
-      { s: "iOS", r: /(iPhone|iPad|iPod)/ },
+      { s: "iOS", r: /(iPhone)/ },
+      { s: "iPadOS", r: /(iPad)/ },
+      { s: "iPod", r: /(iPod)/ },
       { s: "Mac OS X", r: /Mac OS X/ },
       { s: "Mac OS", r: /(Mac OS|MacPPC|MacIntel|Mac_PowerPC|Macintosh)/ },
       { s: "QNX", r: /QNX/ },
@@ -195,7 +197,7 @@ export const clientDetection = {
 
     if (/Windows/.test(os)) {
       osVersion = /Windows (.*)/.exec(os)[1];
-      // os = "Windows";
+      os = "Windows";
     }
 
     switch (os) {
@@ -207,6 +209,8 @@ export const clientDetection = {
         break;
 
       case "iOS":
+      case "iPadOS":
+      case "iPod":
         osVersion = /OS (\d+)_(\d+)_?(\d+)?/.exec(nAgt);
         osVersion = osVersion[1] + "." + osVersion[2] + "." + (osVersion[3] | 0);
         break;
